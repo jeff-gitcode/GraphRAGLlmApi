@@ -1,0 +1,11 @@
+POST http://localhost:5000/api/queries/generate-response
+Content-Type: application/json
+
+{
+  "prompt": "What is the significance of Graph-Based Retrieval Augmented Generation?",
+  "context": "Graph structures can enhance the retrieval process by providing semantic connections between documents."
+}
+
+GET http://localhost:5000/api/queries/get-similar-documents?documentId=1
+
+GET http://localhost:5000/api/queries/get-graph-connections?documentId=1

@@ -1,0 +1,6 @@
+@GraphRAGLlmApi.WebApi_HostAddress = http://localhost:5209
+
+GET {{GraphRAGLlmApi.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

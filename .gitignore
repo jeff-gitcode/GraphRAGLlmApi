@@ -1,0 +1,57 @@
+# .NET Core
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+out/
+
+# NuGet
+*.nupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Others
+*.log
+*.tlog
+*.vspscc
+*.vssscc
+*.dbmdl
+*.pdb
+
+# Rider
+.idea/
+*.sln.iml
+
+# Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+# Docker
+**/docker-compose*.yml
+**/Dockerfile*
+
+# Local secrets
+secrets.json
+
+# OS generated files
+.DS_Store
+Thumbs.db
