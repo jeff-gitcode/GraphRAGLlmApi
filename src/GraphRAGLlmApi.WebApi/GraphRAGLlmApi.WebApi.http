@@ -1,6 +1,46 @@
-@GraphRAGLlmApi.WebApi_HostAddress = http://localhost:5209
+@host = http://localhost:5209
 
-GET {{GraphRAGLlmApi.WebApi_HostAddress}}/weatherforecast/
+### Health check
+GET {{host}}/health
 Accept: application/json
 
-###
+### Document Operations ###
+
+### Index a document
+POST {{host}}/api/documents/index
+Content-Type: application/json
+
+{
+  "title": "Understanding GraphRAG",
+  "content": "GraphRAG (Graph Retrieval Augmented Generation) combines the power of graph databases with RAG approaches to enhance LLM responses by providing structured relationship context between documents.",
+  "metadata": {
+    "author": "AI Researcher",
+    "tags": ["graphrag", "llm", "knowledge-graphs"]
+  }
+}
+
+### Generate a response based on indexed content
+POST {{host}}/api/documents/generate-response
+Content-Type: application/json
+
+{
+  "query": "Explain the benefits of GraphRAG over traditional RAG approaches"
+}
+
+### Get similar documents by query
+GET {{host}}/api/documents/similar-documents?query=knowledge graphs
+Accept: application/json
+
+### Get graph connections for a document
+GET {{host}}/api/documents/graph-connections?documentId=1
+Accept: application/json
+
+### Query Operations ###
+
+### Get similar documents by query (alternative endpoint)
+GET {{host}}/api/queries/similar-documents?documentId=document-123
+Accept: application/json
+
+### Get graph connections (alternative endpoint)
+GET {{host}}/api/queries/graph-connections?documentId=1
+Accept: application/json

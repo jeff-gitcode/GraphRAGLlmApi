@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using GraphRAGLlmApi.Domain.Entities;
 using GraphRAGLlmApi.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading;
 
 namespace GraphRAGLlmApi.Infrastructure.Persistence.Repositories
 {
@@ -20,7 +23,7 @@ namespace GraphRAGLlmApi.Infrastructure.Persistence.Repositories
             return await _context.GraphNodes.FindAsync(id);
         }
 
-        public async Task<IEnumerable<GraphNode>> GetGraphConnectionsAsync(int documentId)
+        public async Task<IEnumerable<GraphNode>> GetGraphConnectionsAsync(Guid documentId)
         {
             return await _context.GraphNodes
                 .Include(node => node.Connections)
@@ -49,5 +52,65 @@ namespace GraphRAGLlmApi.Infrastructure.Persistence.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<IEnumerable<GraphConnection>> GetGraphConnectionsAsync(Guid documentId, CancellationToken cancellationToken = default)
+        {
+            return await _context.GraphConnections
+                .Where(c => c.SourceNode.DocumentId.ToString() == documentId.ToString() || c.TargetNode.DocumentId.ToString() == documentId.ToString())
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<GraphNode>> GetRelatedNodesAsync(Guid documentId)
+        {
+            var connections = await _context.GraphConnections
+                .Include(c => c.SourceNode)
+                .Include(c => c.TargetNode)
+                .Where(c => c.SourceNode.DocumentId.ToString() == documentId.ToString() || c.TargetNode.DocumentId.ToString() == documentId.ToString())
+                .ToListAsync();
+
+            return connections
+                .SelectMany(c => new[] { c.SourceNode, c.TargetNode })
+                .Where(n => n.DocumentId.ToString() != documentId.ToString())
+                .Distinct()
+                .ToList();
+        }
+
+        public async Task DeleteGraphNodeAsync(Guid documentId)
+        {
+            var nodes = await _context.GraphNodes
+                .Where(n => n.DocumentId.ToString() == documentId.ToString())
+                .ToListAsync();
+
+            _context.GraphNodes.RemoveRange(nodes);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddDocumentToGraphAsync(Document document, CancellationToken cancellationToken = default)
+        {
+            var graphNode = new GraphNode
+            {
+                DocumentId = document.Id,
+                Label = document.Title,
+                Type = "Document"
+            };
+
+            await _context.GraphNodes.AddAsync(graphNode, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<GraphConnection>> GetConnectionsAsync(object nodeId, CancellationToken cancellationToken = default)
+        {
+            int id = Convert.ToInt32(nodeId);
+
+            return await _context.GraphConnections
+                .Where(c => c.SourceNodeId == id || c.TargetNodeId == id)
+                .ToListAsync(cancellationToken);
+        }
+
+        Task<IEnumerable<GraphNode>> IGraphService.GetGraphConnectionsAsync(Guid documentId, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

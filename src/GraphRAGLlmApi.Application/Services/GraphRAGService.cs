@@ -19,9 +19,21 @@ namespace GraphRAGLlmApi.Application.Services
 
         public async Task<string> GenerateResponseAsync(string query, CancellationToken cancellationToken = default)
         {
-            var similarDocuments = await _vectorDbService.GetSimilarDocumentsAsync(query, cancellationToken);
-            var graphConnections = await _graphService.GetGraphConnectionsAsync(similarDocuments, cancellationToken);
-            var response = await _llmService.GenerateResponseAsync(query, similarDocuments, graphConnections, cancellationToken);
+            // inject IEmbeddingService to generate embeddings from text
+            var queryEmbedding = await _llmService.GenerateEmbeddingAsync(query, cancellationToken);
+
+            // Find similar embeddings
+            var similarEmbeddings = await _vectorDbService.GetSimilarEmbeddingsAsync(queryEmbedding, 10, cancellationToken);
+
+            // Get the documents
+            var documentIds = similarEmbeddings.Select(e => e.DocumentId).ToList();
+            var similarDocuments = await _vectorDbService.GetDocumentsByIdsAsync(documentIds, cancellationToken);
+
+            // Use the ID of the most similar document (or empty GUID if none found)
+            var mostRelevantDocId = similarDocuments.FirstOrDefault()?.Id ?? Guid.Empty;
+            var graphConnections = await _graphService.GetGraphConnectionsAsync(mostRelevantDocId, cancellationToken);
+
+            var response = await _llmService.GenerateResponseAsync(query, mostRelevantDocId, graphConnections, cancellationToken);
             return response;
         }
     }

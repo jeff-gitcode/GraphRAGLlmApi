@@ -6,7 +6,7 @@ using GraphRAGLlmApi.Domain.Entities;
 
 namespace GraphRAGLlmApi.Application.Commands.IndexDocument
 {
-    public class IndexDocumentCommandHandler : IRequestHandler<IndexDocumentCommand>
+    public class IndexDocumentCommandHandler : IRequestHandler<IndexDocumentCommand, Unit>
     {
         private readonly IVectorDbService _vectorDbService;
         private readonly ILlmService _llmService;

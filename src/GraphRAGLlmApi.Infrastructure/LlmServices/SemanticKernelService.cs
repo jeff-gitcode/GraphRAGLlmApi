@@ -12,12 +12,24 @@ namespace GraphRAGLlmApi.Infrastructure.LlmServices
             _ollamaService = ollamaService;
         }
 
+        public Task<string> GenerateEmbeddingAsync(string text, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+
         public async Task<string> GenerateResponseAsync(string input)
         {
             // Call the LLM service to generate a response based on the input
             var response = await _ollamaService.GenerateResponseAsync(input);
             return response;
         }
+
+        public Task<string> GenerateResponseAsync(string prompt, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public async Task<string> RerankResponsesAsync(string[] responses, string query)
         {

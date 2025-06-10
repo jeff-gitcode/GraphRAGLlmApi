@@ -7,10 +7,11 @@ namespace GraphRAGLlmApi.Domain.Interfaces
     {
         Task StoreEmbeddingAsync(Embedding embedding);
         Task<Embedding> GetEmbeddingAsync(Guid documentId);
-        Task<IEnumerable<Embedding>> GetSimilarEmbeddingsAsync(EmbeddingVector vector, int limit);
-        Task<Guid> GetSimilarDocumentsAsync(string query, CancellationToken cancellationToken);
+        Task<List<Embedding>> GetSimilarEmbeddingsAsync(EmbeddingVector vector, int limit, CancellationToken cancellationToken = default);
         Task StoreDocumentAsync(Document document, CancellationToken cancellationToken);
-        Task<List<Embedding>> GetEmbeddingsAsync(List<int> list);
+        Task<List<Embedding>> GetEmbeddingsAsync(List<Guid> list);
+        // Update IVectorDbService.cs to include:
+        Task<List<Document>> GetDocumentsByIdsAsync(List<Guid> documentIds, CancellationToken cancellationToken = default);
 
     }
 }

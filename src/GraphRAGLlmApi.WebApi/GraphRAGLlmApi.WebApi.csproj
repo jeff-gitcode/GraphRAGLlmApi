@@ -8,6 +8,19 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GraphRAGLlmApi.Application\GraphRAGLlmApi.Application.csproj" />
+    <ProjectReference Include="..\GraphRAGLlmApi.Domain\GraphRAGLlmApi.Domain.csproj" />
+    <ProjectReference Include="..\GraphRAGLlmApi.Infrastructure\GraphRAGLlmApi.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

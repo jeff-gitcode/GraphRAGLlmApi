@@ -2,7 +2,7 @@ namespace GraphRAGLlmApi.Domain.ValueObjects
 {
     public class EmbeddingVector
     {
-        public float[] Vector { get; }
+        public float[] Vector { get; private set; }
 
         public EmbeddingVector(float[] vector)
         {

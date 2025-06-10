@@ -3,6 +3,7 @@ using GraphRAGLlmApi.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add Application layer services
-builder.Services.AddApplication();
+builder.Services.AddApplicationServices();
 
 // Add Infrastructure layer services
 builder.Services.AddInfrastructure(builder.Configuration);

@@ -28,7 +28,11 @@ namespace GraphRAGLlmApi.WebApi.Controllers
         [HttpGet("graph-connections")]
         public async Task<IActionResult> GetGraphConnections([FromQuery] string documentId)
         {
-            var query = new GetGraphConnectionsQuery(documentId);
+            if (!int.TryParse(documentId, out var documentIdInt))
+            {
+                return BadRequest("Invalid documentId. It must be an integer.");
+            }
+            var query = new GetGraphConnectionsQuery(documentIdInt);
             var result = await _mediator.Send(query);
             return Ok(result);
         }

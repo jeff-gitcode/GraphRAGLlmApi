@@ -1,3 +1,4 @@
+using GraphRAGLlmApi.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace GraphRAGLlmApi.Infrastructure.Persistence
@@ -12,6 +13,7 @@ namespace GraphRAGLlmApi.Infrastructure.Persistence
         public DbSet<Document> Documents { get; set; }
         public DbSet<Embedding> Embeddings { get; set; }
         public DbSet<GraphNode> GraphNodes { get; set; }
+        public DbSet<GraphConnection> GraphConnections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,6 +25,10 @@ namespace GraphRAGLlmApi.Infrastructure.Persistence
 
             modelBuilder.Entity<GraphNode>()
                 .HasKey(g => g.Id);
+
+            modelBuilder.Entity<GraphConnection>()
+                .HasKey(gc => gc.Id);
+
 
             // Additional configurations can be added here
         }

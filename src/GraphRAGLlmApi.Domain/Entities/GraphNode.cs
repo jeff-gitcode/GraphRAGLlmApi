@@ -1,6 +1,11 @@
-public class GraphNode
+namespace GraphRAGLlmApi.Domain.Entities
 {
-    public int Id { get; set; }
-    public int DocumentId { get; set; }
-    public List<int> Connections { get; set; } = new List<int>();
+    public class GraphNode
+    {
+        public int Id { get; set; }
+        public Guid DocumentId { get; set; }
+        public string Type { get; set; }
+        public string Label { get; set; } // Added Label property
+        public ICollection<GraphConnection> Connections { get; set; }
+    }
 }
