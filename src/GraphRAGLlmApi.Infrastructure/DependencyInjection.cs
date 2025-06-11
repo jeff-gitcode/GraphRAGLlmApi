@@ -1,3 +1,4 @@
+using GraphRAGLlmApi.Application.Services;
 using GraphRAGLlmApi.Domain.Interfaces;
 using GraphRAGLlmApi.Infrastructure.LlmServices;
 using GraphRAGLlmApi.Infrastructure.Persistence;
@@ -24,21 +25,19 @@ namespace GraphRAGLlmApi.Infrastructure
             services.AddDbContext<PostgresVectorDbContext>(options =>
                 options.UseNpgsql(dataSource));
 
-            // Register HttpClient for OllamaService
-            services.AddHttpClient<OllamaService>(client =>
-            {
-                client.BaseAddress = new Uri(configuration["Ollama:ApiUrl"] ?? "http://localhost:11434/api/generate");
-            });
+            // Register HttpClient without passing string parameter
+            services.AddHttpClient<OllamaService>();
 
             // Register repositories
             services.AddScoped<IVectorDbService, VectorRepository>();
             services.AddScoped<IGraphService, GraphRepository>();
 
-            // Register LLM services
+            // Register OllamaService to ILlmService
             services.AddScoped<ILlmService, OllamaService>();
 
             // Add other infrastructure services
             // services.AddScoped<IEmbeddingService, EmbeddingService>();
+            services.AddScoped<IRerankingService, RerankingService>();
 
             return services;
         }

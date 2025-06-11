@@ -2,25 +2,13 @@ namespace GraphRAGLlmApi.Domain.ValueObjects
 {
     public class EmbeddingVector
     {
-        public float[] Vector { get; private set; }
+        public float[] Values { get; set; }
 
-        public EmbeddingVector(float[] vector)
-        {
-            Vector = vector ?? throw new ArgumentNullException(nameof(vector));
-        }
+        public EmbeddingVector() { }
 
-        public override bool Equals(object obj)
+        public EmbeddingVector(float[] values)
         {
-            if (obj is EmbeddingVector other)
-            {
-                return Vector.SequenceEqual(other.Vector);
-            }
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Vector);
+            Values = values;
         }
     }
 }

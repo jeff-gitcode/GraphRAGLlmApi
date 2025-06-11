@@ -7,6 +7,8 @@ namespace GraphRAGLlmApi.Domain.Entities
         public required string Content { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        public Embedding Embedding { get; set; }
+
         public Document()
         {
             CreatedAt = DateTime.UtcNow;

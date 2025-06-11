@@ -36,7 +36,7 @@ namespace GraphRAGLlmApi.Application.Services
         {
             // Implement your scoring logic here based on the document, its embeddings, and the query
             // This is a placeholder for the actual scoring algorithm
-            return embeddings.FirstOrDefault(e => e.DocumentId == document.Id)?.Vector.Vector.Length ?? 0;
+            return embeddings.FirstOrDefault(e => e.DocumentId == document.Id)?.Vector.Values.Length ?? 0;
         }
     }
 }

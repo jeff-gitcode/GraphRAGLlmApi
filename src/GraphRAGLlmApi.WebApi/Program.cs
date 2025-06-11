@@ -29,6 +29,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Add health checks
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -42,6 +45,9 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
+
+// Map health checks
+app.MapHealthChecks("/healthz");
 
 app.Run();
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GraphRAGLlmApi.Domain.Entities;
 using GraphRAGLlmApi.Domain.Interfaces;
 using GraphRAGLlmApi.Domain.ValueObjects;
+using Microsoft.Extensions.Configuration;
 
 namespace GraphRAGLlmApi.Infrastructure.LlmServices
 {
@@ -13,10 +14,10 @@ namespace GraphRAGLlmApi.Infrastructure.LlmServices
         private readonly HttpClient _httpClient;
         private readonly string _ollamaApiUrl;
 
-        public OllamaService(HttpClient httpClient, string ollamaApiUrl)
+        public OllamaService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _ollamaApiUrl = ollamaApiUrl;
+            _ollamaApiUrl = configuration["Ollama:ApiUrl"] ?? "http://localhost:11434/api/generate";
         }
 
         public Task<EmbeddingVector> GenerateEmbeddingAsync(string content, CancellationToken cancellationToken)

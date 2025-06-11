@@ -1,7 +1,7 @@
 @host = http://localhost:5209
 
 ### Health check
-GET {{host}}/health
+GET {{host}}/healthz
 Accept: application/json
 
 ### Document Operations ###
@@ -28,19 +28,46 @@ Content-Type: application/json
 }
 
 ### Get similar documents by query
-GET {{host}}/api/documents/similar-documents?query=knowledge graphs
+GET {{host}}/api/documents/similar-documents?query=knowledge%20graphs
 Accept: application/json
 
-### Get graph connections for a document
-GET {{host}}/api/documents/graph-connections?documentId=1
+### Get graph connections for document
+GET {{host}}/api/documents/graph-connections?documentId=00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Get document by ID
+GET {{host}}/api/documents/00000000-0000-0000-0000-000000000001
 Accept: application/json
 
 ### Query Operations ###
 
-### Get similar documents by query (alternative endpoint)
-GET {{host}}/api/queries/similar-documents?documentId=document-123
+### Get similar documents by embedding
+POST {{host}}/api/queries/similar-documents
+Content-Type: application/json
+
+{
+  "query": "How does GraphRAG improve information retrieval?",
+  "limit": 5
+}
+
+### Generate embedding for text
+POST {{host}}/api/embeddings/generate
+Content-Type: application/json
+
+{
+  "text": "Understanding vector databases and their applications in GraphRAG"
+}
+
+### Database Setup ###
+
+### Check database status
+GET {{host}}/api/system/database-status
 Accept: application/json
 
-### Get graph connections (alternative endpoint)
-GET {{host}}/api/queries/graph-connections?documentId=1
+### Create vector extension
+POST {{host}}/api/system/initialize-database
+Accept: application/json
+
+### Delete all documents (CAUTION!)
+DELETE {{host}}/api/documents
 Accept: application/json

@@ -26,8 +26,7 @@ namespace GraphRAGLlmApi.Infrastructure.Persistence.Repositories
         public async Task<IEnumerable<GraphNode>> GetGraphConnectionsAsync(Guid documentId)
         {
             return await _context.GraphNodes
-                .Include(node => node.Connections)
-                .Where(node => node.DocumentId == documentId)
+                .Where(n => n.DocumentId.ToString() == documentId.ToString())
                 .ToListAsync();
         }
 
@@ -89,9 +88,13 @@ namespace GraphRAGLlmApi.Infrastructure.Persistence.Repositories
         {
             var graphNode = new GraphNode
             {
+                Id = Guid.NewGuid(),
+                Name = document.Title,
+                Type = "Document",
                 DocumentId = document.Id,
-                Label = document.Title,
-                Type = "Document"
+                Document = document,
+                OutgoingConnections = new List<GraphConnection>(),
+                IncomingConnections = new List<GraphConnection>()
             };
 
             await _context.GraphNodes.AddAsync(graphNode, cancellationToken);
@@ -100,11 +103,20 @@ namespace GraphRAGLlmApi.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<GraphConnection>> GetConnectionsAsync(object nodeId, CancellationToken cancellationToken = default)
         {
-            int id = Convert.ToInt32(nodeId);
+            if (nodeId is Guid guidId)
+            {
+                return await _context.GraphConnections
+                    .Where(c => c.SourceNodeId == guidId || c.TargetNodeId == guidId)
+                    .ToListAsync(cancellationToken);
+            }
+            else if (nodeId is int intId)
+            {
+                return await _context.GraphConnections
+                    .Where(c => c.SourceNodeId == new Guid(intId.ToString()) || c.TargetNodeId == new Guid(intId.ToString()))
+                    .ToListAsync(cancellationToken);
+            }
 
-            return await _context.GraphConnections
-                .Where(c => c.SourceNodeId == id || c.TargetNodeId == id)
-                .ToListAsync(cancellationToken);
+            throw new ArgumentException("Invalid node ID type.");
         }
 
         Task<IEnumerable<GraphNode>> IGraphService.GetGraphConnectionsAsync(Guid documentId, CancellationToken cancellationToken)
